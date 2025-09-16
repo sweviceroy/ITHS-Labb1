@@ -24,15 +24,22 @@ namespace ITHSLab1NS
         public static void Main(string[] args)
         {
             GUI ourGUI = new GUI();
+            string ourInput = string.Empty; // maybe we gonna need access to this one here, so lets keep it in our main class. 
+
             while (true)
             {
                 ourGUI.PrintWelcomePrompt();
-                if (ourGUI.gotValidInput())
+                var (ok, input) = ourGUI.gotValidInput();
+
+                // Check if valid input. Then lets roll! Check for substrings
+                if (ok)
                 {
-
+                    //break out tuple for input for readability
+                    ourInput = input;
+                    Console.Clear();
+                    Console.WriteLine($"Output: {ourInput}");
                 }
-
-            }//en 8-loop
+            } // en 8-loop
         }
     }
 
@@ -41,31 +48,34 @@ namespace ITHSLab1NS
     {
         private string stringen;
 
+        // konstructor
         public GUI()
         {
             stringen = string.Empty;
         }
+
+        // Just a welcome prompt with instructions what to type.
         public void PrintWelcomePrompt()
         {
             Console.Write("Please provide a text containing numbers that you wish to highlight substring within: ");
         }
-
-        public bool gotValidInput()
+        // Checks if the input is valid and returns a tuple with bool and the input itself
+        public (bool, string) gotValidInput()
         {
             try
             {
-                // try to read & validate; if ok, store it AND return true
+                // try to read & validate; if ok, store it AND return true + string
                 stringen = getInput();
-                return true;
+                return (true, stringen);
             }
             catch (Exception ex)
             {
                 // simple feedback; you can pretty this up later
                 Console.WriteLine($"Fel: {ex.Message}");
-                return false;
+                return (false, string.Empty);
             }
         }
-
+        // Take input from user (private)
         private string getInput()
         {
             // 1) read
@@ -73,7 +83,7 @@ namespace ITHSLab1NS
 
             // 2) null/empty/too short
             if (string.IsNullOrWhiteSpace(input) || input.Length < 2)
-                throw new ArgumentException("texten är för kort eller tom.");
+                throw new ArgumentException("Texten är för kort eller tom. \a");
 
             // 3) must contain at least 2 digits
             int digitCount = 0;
@@ -81,19 +91,108 @@ namespace ITHSLab1NS
                 if (char.IsDigit(c)) digitCount++;
 
             if (digitCount < 2)
-                throw new ArgumentException("texten måste innehålla minst två siffror.");
+                throw new ArgumentException("Texten måste innehålla minst två siffror.\a");
 
             // 4) success
             return input;
         }
-        /*
-        private int digitCount()
-        {
-            foreach (char c in input)
-                if (char.IsDigit(c)) digitCount++;
 
+        // Substring extractor. Takes out all the substrings in the "stringen" input has to be a list due to unknown amount of substrings. COuld have
+        // ASDF!!!!!!!!!!!!!!!! >:O This doesnt work because the same substring can apear tvåjs! 
+        public List<string> substringExtractor(string stringen)
+        {
+            // store all found substrings
+            List<string> _substrings = new List<string>();
+
+            // loop over each starting position except the last char
+            for (int i = 0; i < stringen.Length - 1; i++)
+            {
+                // only start if current is a digit
+                if (char.IsDigit(stringen[i]))
+                {
+                    char startDigit = stringen[i];
+
+                    // second loop, look forward from i+1
+                    string temp = "";
+                    for (int j = i + 1; j < stringen.Length; j++)
+                    {
+                        char c = stringen[j];
+
+                        if (!char.IsDigit(c))
+                        {
+                            // non-digit breaks the substring attempt
+                            break;
+                        }
+
+                        if (c == startDigit)
+                        {
+                            // build substring manually (include both ends)
+                            temp = "";
+                            for (int x = i; x <= j; x++)
+                            {
+                                temp += stringen[x];
+                            }
+
+                            // add to list
+                            _substrings.Add(temp);
+
+                            // stop looking further for this start,
+                            // because more same digits inside would break the rule
+                            break;
+                        }
+                    }//end second for loop (substring search)
+                }
+            }// end first loop
+
+            return _substrings;
+        }
+
+        /* BROKEN
+        public List<string> substringExtractor(string stringen)
+        {
+            //has to be a list due to unknown amount of substrings. 
+            List<string> _substrings = new List<string>();
+            char currentChar = new char();
+            string _temp = "";
+
+            //first loop, gets each char in the list except for the last one. (we cant make a substring out of just 1 char)
+            for (int i = 0; i < stringen.Length -1; i++)
+            {
+                _temp = "";
+                //check if the current pos really is a digit
+                if (char.IsDigit(stringen[i]))
+                {
+                    currentChar = stringen[i];
+
+                    // second loop now collects substrings by checking for next character
+                    for (int j = i+1; j < stringen.Length; j++)
+                    {
+                        char _c = stringen[j];
+                        // browse through and see if we found a match!
+                        if (char.IsDigit(_c) && (_c.Equals(currentChar)))
+                        {
+                            // NOW WE HAVE A MATCH! LETS ADD THE SUBSTRING
+                            for (int x = i; x < j; x++)
+                            {
+                                _temp += stringen[x];
+                            }//end final for
+                            _substrings.Add(_temp);
+                        }
+                        else break;
+                    }// end 2nd for loop
+                }
+                
+            }//end 1st for loop
+            return _substrings;
+        }// end substringExtractor METHOD
+        */
+
+    }
+    /* 
+        private int substringCounter(string stringen)
+        {
+            for (int i =)                                       // BULLSHIT because it si repetition
         }
         */
-    }
 }
 #endregion
