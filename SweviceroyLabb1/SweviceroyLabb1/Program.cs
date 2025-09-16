@@ -37,15 +37,19 @@ namespace ITHSLab1NS
                     //break out tuple for input for readability
                     ourInput = input;
                     Console.Clear();
-                    Console.WriteLine($"Output: {ourInput}");
-
+                    ourGUI.PrintSubstrings(input, ourGUI.substringExtractor(input));
+                    Console.Beep(5000, 1);
+                    Console.WriteLine();
+                    Console.WriteLine("Press enter to continue");
+                    Console.ReadLine();
+                    
                     /* TEST TO PRINT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! CLEARED [ V ]
                     var list = ourGUI.substringExtractor(input);
 
                     foreach (var (val, start, end) in list)
                     {
                         Console.WriteLine($"{val} at {start}-{end}");
-                    }*/ 
+                    }*/
                 }
             } // en 8-loop
         }
@@ -84,6 +88,7 @@ namespace ITHSLab1NS
             {
                 // simple feedback; you can pretty this up later
                 Console.WriteLine($"Fel: {ex.Message}");
+                Thread.Sleep(3000);
                 return (false, string.Empty);
             }
         }
@@ -151,7 +156,31 @@ namespace ITHSLab1NS
 
             return results;
         }
+        public void PrintSubstrings(string stringen, List<(string Value, int Start, int End)> substrings)
+        {
+            Console.WriteLine("Here is the string and the subsequent substrings");
+            Console.WriteLine(stringen);
 
+            // TODO:
+            // For each tuple in substrings:
+            // - Print the full original string
+            // - Highlight the substring between Start and End using another ConsoleColor
+            //   - Reset back to default color after printing
+
+            var list = substrings;
+
+            foreach (var (val, start, end) in list)
+            {
+                for (int i = 0; i < stringen.Length; i++)
+                {
+                    if (i >= start && i <= end) Console.ForegroundColor = ConsoleColor.Red;
+                    else Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write(stringen[i]);
+                }
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine();
+            }
+        }// End PrintSubstrings
 
         /* BROKEN
         public List<string> substringExtractor(string stringen)
