@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SweviceroyLabb1")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bc4daa4ff6851fa2ab6f88bda1934705fa1ba446")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2230f11d11f7da77a9171e4ee95646bfef6bee85")]
 [assembly: System.Reflection.AssemblyProductAttribute("SweviceroyLabb1")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SweviceroyLabb1")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

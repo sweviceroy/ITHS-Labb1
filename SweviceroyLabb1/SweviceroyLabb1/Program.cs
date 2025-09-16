@@ -38,6 +38,14 @@ namespace ITHSLab1NS
                     ourInput = input;
                     Console.Clear();
                     Console.WriteLine($"Output: {ourInput}");
+
+                    /* TEST TO PRINT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! CLEARED [ V ]
+                    var list = ourGUI.substringExtractor(input);
+
+                    foreach (var (val, start, end) in list)
+                    {
+                        Console.WriteLine($"{val} at {start}-{end}");
+                    }*/ 
                 }
             } // en 8-loop
         }
@@ -57,6 +65,10 @@ namespace ITHSLab1NS
         // Just a welcome prompt with instructions what to type.
         public void PrintWelcomePrompt()
         {
+            // retro feelz
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Clear(); 
             Console.Write("Please provide a text containing numbers that you wish to highlight substring within: ");
         }
         // Checks if the input is valid and returns a tuple with bool and the input itself
@@ -98,54 +110,48 @@ namespace ITHSLab1NS
         }
 
         // Substring extractor. Takes out all the substrings in the "stringen" input has to be a list due to unknown amount of substrings. COuld have
-        // ASDF!!!!!!!!!!!!!!!! >:O This doesnt work because the same substring can apear tvåjs! 
-        public List<string> substringExtractor(string stringen)
+        // lets solve it with tuple
+        // Rules: starts/ends with same digit, only digits inside, no extra of that digit inside.
+        public List<(string Value, int Start, int End)> substringExtractor(string stringen)
         {
-            // store all found substrings
-            List<string> _substrings = new List<string>();
+            var results = new List<(string Value, int Start, int End)>();
 
             // loop over each starting position except the last char
             for (int i = 0; i < stringen.Length - 1; i++)
             {
                 // only start if current is a digit
-                if (char.IsDigit(stringen[i]))
+                if (!char.IsDigit(stringen[i])) continue;
+
+                char startDigit = stringen[i];
+
+                // scan forward from i+1
+                for (int j = i + 1; j < stringen.Length; j++)
                 {
-                    char startDigit = stringen[i];
+                    char c = stringen[j];
 
-                    // second loop, look forward from i+1
-                    string temp = "";
-                    for (int j = i + 1; j < stringen.Length; j++)
+                    // if non-digit, this start attempt is ripperoni! ;)
+                    if (!char.IsDigit(c)) break;
+
+                    // FOUND IT! Record the positions, was simplier than expected we just use i and j :D
+                    if (c == startDigit)
                     {
-                        char c = stringen[j];
-
-                        if (!char.IsDigit(c))
+                        string temp = "";
+                        for (int x = i; x <= j; x++)
                         {
-                            // non-digit breaks the substring attempt
-                            break;
+                            temp += stringen[x];
                         }
 
-                        if (c == startDigit)
-                        {
-                            // build substring manually (include both ends)
-                            temp = "";
-                            for (int x = i; x <= j; x++)
-                            {
-                                temp += stringen[x];
-                            }
+                        results.Add((temp, i, j));
 
-                            // add to list
-                            _substrings.Add(temp);
-
-                            // stop looking further for this start,
-                            // because more same digits inside would break the rule
-                            break;
-                        }
-                    }//end second for loop (substring search)
+                        // stop searching further for this start; longer ones would include the same digit inside
+                        break;
+                    }
                 }
-            }// end first loop
+            }
 
-            return _substrings;
+            return results;
         }
+
 
         /* BROKEN
         public List<string> substringExtractor(string stringen)
